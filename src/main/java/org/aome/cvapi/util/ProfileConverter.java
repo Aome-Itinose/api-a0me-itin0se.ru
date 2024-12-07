@@ -13,8 +13,6 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class ProfileConverter {
 
-    private final ImageFileManager imageFileManager;
-
     public static ProfileEntity profileDtoToEntity(ProfileSaveDto dto) throws IOException {
         return ProfileEntity
                 .builder()

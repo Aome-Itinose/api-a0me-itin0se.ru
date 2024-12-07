@@ -8,12 +8,11 @@ public class ExceptionMessageCollector {
 
     public String collectMessage(BindingResult bindingResult) {
         StringBuffer message = new StringBuffer();
-        bindingResult.getFieldErrors().forEach(fieldError -> {
-            message.append(fieldError.getField())
-                    .append(": ")
-                    .append(fieldError.getDefaultMessage())
-                    .append(";");
-        });
+        bindingResult.getFieldErrors().forEach(fieldError -> message
+                .append(fieldError.getField())
+                .append(": ")
+                .append(fieldError.getDefaultMessage())
+                .append(";"));
         return message.toString();
     }
 }
