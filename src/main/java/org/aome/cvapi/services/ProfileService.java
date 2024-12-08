@@ -1,6 +1,7 @@
 package org.aome.cvapi.services;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.aome.cvapi.dtos.ProfileDto;
 import org.aome.cvapi.dtos.ProfileSaveDto;
 import org.aome.cvapi.store.models.ProfileEntity;
@@ -11,6 +12,7 @@ import org.aome.cvapi.util.exceptions.ImageNotFoundException;
 import org.aome.cvapi.util.exceptions.ProfileNotFoundException;
 import org.aome.cvapi.util.exceptions.ProfileNotGetException;
 import org.aome.cvapi.util.exceptions.ProfileNotSaveException;
+import org.bson.types.ObjectId;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 @Transactional(readOnly = true)
@@ -26,13 +29,16 @@ public class ProfileService {
     private final ProfileRepository profileRepository;
 
     @Transactional
-    public void saveProfile(ProfileSaveDto profileDto) throws ProfileNotSaveException {
+    public ObjectId saveProfile(ProfileSaveDto profileDto) throws ProfileNotSaveException {
+        ProfileEntity savedProfile;
         try {
-            profileRepository.save(enrich(ProfileConverter.profileDtoToEntity(profileDto)));
+            savedProfile = profileRepository.save(enrich(ProfileConverter.profileDtoToEntity(profileDto)));
         }catch (IOException e) {
-            //Todo: add logger
+            log.error("Profile not saved: {}", e.getMessage());
             throw new ProfileNotSaveException("Profile not save");
         }
+        log.debug("Profile saved");
+        return savedProfile.getId();
     }
 
     public ProfileDto findProfile() throws ProfileNotGetException, ProfileNotFoundException {
@@ -42,9 +48,10 @@ public class ProfileService {
         try{
             profileDto = ProfileConverter.profileEntityToDto(profile);
         }catch (IOException e) {
-            //Todo: add logger
+            log.error("Profile not get: {}", e.getMessage());
             throw new ProfileNotGetException("Profile not get");
         }
+        log.debug("Profile found: {}", profileDto);
         return profileDto;
     }
 
@@ -53,9 +60,10 @@ public class ProfileService {
         try {
             inputStreamResource = new ImageFileManager().readPhoto(photoPath);
         }catch (IOException e) {
-            //Todo: add logger
+            log.error("Image not found: {}", e.getMessage());
             throw new ImageNotFoundException("Image not found");
         }
+        log.debug("Image found: {}", photoPath);
         return inputStreamResource;
     }
 

@@ -1,5 +1,7 @@
 package org.aome.cvapi.util;
 
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Marker;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Component;
 
@@ -10,6 +12,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+@Slf4j
 @Component
 public class ImageFileManager {
     private final String PATH = "src/main/resources/static/profilePhotos";
@@ -41,9 +44,10 @@ public class ImageFileManager {
             }
 
         }catch (IOException e) {
-            //Todo: logging
+            log.error(e.getMessage());
             throw new IOException(e.getMessage());
         }
+        log.debug("File save at {}", filePath);
         return String.format("%s/%s", dirName, fileName);
     }
 
@@ -59,9 +63,10 @@ public class ImageFileManager {
         try {
             photo = new InputStreamResource(new FileInputStream(file));
         }catch (IOException e) {
-            //Todo: logging
+            log.error(e.getMessage());
             throw new IOException(e.getMessage());
         }
+        log.debug("File read from {}", filePath);
         return photo;
     }
 }
