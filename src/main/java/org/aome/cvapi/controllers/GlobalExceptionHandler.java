@@ -28,11 +28,11 @@ public class GlobalExceptionHandler {
         return new ExceptionResponse(validationException.getMessage(), LocalDateTime.now());
     }
 
-    @ExceptionHandler({ProfileNotFoundException.class, ImageNotFoundException.class})
+    @ExceptionHandler({ProfileNotFoundException.class, ImageNotFoundException.class, ProjectNotFoundException.class, TechnologyNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    private ExceptionResponse notFoundExceptionHandler(RuntimeException profileNotFoundException){
-        log.error(profileNotFoundException.getMessage());
-        return new ExceptionResponse(profileNotFoundException.getMessage(), LocalDateTime.now());
+    private ExceptionResponse notFoundExceptionHandler(RuntimeException notFoundException){
+        log.error(notFoundException.getMessage());
+        return new ExceptionResponse(notFoundException.getMessage(), LocalDateTime.now());
     }
 }
 

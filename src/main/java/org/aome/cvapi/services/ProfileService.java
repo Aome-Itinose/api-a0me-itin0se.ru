@@ -7,7 +7,7 @@ import org.aome.cvapi.dtos.ProfileSaveDto;
 import org.aome.cvapi.store.models.ProfileEntity;
 import org.aome.cvapi.store.repositories.ProfileRepository;
 import org.aome.cvapi.util.ImageFileManager;
-import org.aome.cvapi.util.ProfileConverter;
+import org.aome.cvapi.util.converters.ProfileConverter;
 import org.aome.cvapi.util.exceptions.ImageNotFoundException;
 import org.aome.cvapi.util.exceptions.ProfileNotFoundException;
 import org.aome.cvapi.util.exceptions.ProfileNotGetException;
@@ -52,6 +52,7 @@ public class ProfileService {
             throw new ProfileNotGetException("Profile not get");
         }
         log.debug("Profile found: {}", profileDto);
+//        throw new ProfileNotFoundException("Profile not found");
         return profileDto;
     }
 

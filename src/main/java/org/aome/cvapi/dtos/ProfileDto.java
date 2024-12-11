@@ -6,6 +6,8 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.aome.cvapi.store.models.ProfileEntity;
 
+import java.util.Objects;
+
 
 /**
  * DTO for {@link ProfileEntity}
@@ -28,4 +30,25 @@ public class ProfileDto {
 
     @JsonProperty("photoPath")
     String photoPath;
+
+    @Override
+    public String toString() {
+        return "ProfileDto{" +
+                "id='" + id + '\'' +
+                ", fullName='" + fullName + '\'' +
+                ", aboutMe='" + aboutMe + '\'' +
+                ", photoPath='" + photoPath + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof ProfileDto that)) return false;
+        return Objects.equals(getFullName(), that.getFullName()) && Objects.equals(getAboutMe(), that.getAboutMe()) && Objects.equals(getPhotoPath(), that.getPhotoPath());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getFullName(), getAboutMe(), getPhotoPath());
+    }
 }

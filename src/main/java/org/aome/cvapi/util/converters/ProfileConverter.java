@@ -1,10 +1,11 @@
-package org.aome.cvapi.util;
+package org.aome.cvapi.util.converters;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aome.cvapi.dtos.ProfileDto;
 import org.aome.cvapi.dtos.ProfileSaveDto;
 import org.aome.cvapi.store.models.ProfileEntity;
+import org.aome.cvapi.util.ImageFileManager;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +25,7 @@ public class ProfileConverter {
                 .aboutMe(dto.getAboutMe())
                 .photoPath(new ImageFileManager().writePhoto(dto.getPhoto(), dto.getFullName()))
                 .build();
-        log.debug("ProfileEntity: {}", entity);
+        log.debug("{} converted to {}", dto, entity);
         return entity;
     }
 
@@ -36,7 +37,7 @@ public class ProfileConverter {
                 .aboutMe(entity.getAboutMe())
                 .photoPath(entity.getPhotoPath())
                 .build();
-        log.debug("ProfileDto: {}", dto);
+        log.debug("{} converted to {}", entity, dto);
         return dto;
     }
 
