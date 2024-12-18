@@ -29,7 +29,7 @@ public class ProfileConverter {
         return entity;
     }
 
-    public static ProfileDto profileEntityToDto(ProfileEntity entity) throws IOException {
+    public static ProfileDto profileEntityToDto(ProfileEntity entity){
         ProfileDto dto = ProfileDto
                 .builder()
                 .id(entity.getId() == null ? "" : entity.getId().toString())

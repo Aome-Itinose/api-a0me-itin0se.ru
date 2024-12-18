@@ -42,8 +42,19 @@ public class ProjectService {
             throw new ProjectNotFoundException("Projects not found");
         }
         log.debug("Found {} projects", projectsList.size());
-//        throw new ProjectNotFoundException("Projects not found");
         return projectsList.stream().map(ProjectConverter::projectEntityToDto).toList();
+    }
+
+    public boolean isProjectExist(ObjectId projectId) {
+        return projectRepository.existsById(projectId);
+    }
+
+    @Transactional
+    public ObjectId deleteProject(String projectId) {
+        ObjectId oId = new ObjectId(projectId);
+        projectRepository.deleteProjectEntityById(oId);
+        log.debug("Project deleted");
+        return oId;
     }
 
     private ProjectEntity enrich(ProjectEntity entity) {

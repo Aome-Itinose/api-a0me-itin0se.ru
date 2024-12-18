@@ -46,5 +46,17 @@ public class TechnologyService {
 //        throw new TechnologyNotFoundException("Technologies not found");
         return technologyDtoList;
     }
+
+    public boolean isTechnologyExist(ObjectId technologyId) {
+        return technologyRepository.existsTechnologyEntitiesById(technologyId);
+    }
+
+    @Transactional
+    public ObjectId deleteTechnology(String technologyId) {
+        ObjectId oId = new ObjectId(technologyId);
+        technologyRepository.deleteTechnologyEntityById(oId);
+        log.debug("Technology deleted {}", technologyId);
+        return oId;
+    }
 }
 

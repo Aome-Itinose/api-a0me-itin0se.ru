@@ -19,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -44,16 +46,28 @@ public class ProfileService {
     public ProfileDto findProfile() throws ProfileNotGetException, ProfileNotFoundException {
         ProfileEntity profile = profileRepository.findTopByOrderByTimestampDesc()
                 .orElseThrow(() -> new ProfileNotFoundException("Profile not found"));
-        ProfileDto profileDto;
-        try{
-            profileDto = ProfileConverter.profileEntityToDto(profile);
-        }catch (IOException e) {
-            log.error("Profile not get: {}", e.getMessage());
-            throw new ProfileNotGetException("Profile not get");
-        }
+        ProfileDto profileDto = ProfileConverter.profileEntityToDto(profile);
         log.debug("Profile found: {}", profileDto);
 //        throw new ProfileNotFoundException("Profile not found");
         return profileDto;
+    }
+
+    public List<ProfileDto> findAllProfiles() {
+        List<ProfileEntity> profiles = profileRepository.findAll();
+        if(profiles.isEmpty()) {
+            throw new ProfileNotFoundException("Profile not found");
+        }
+        List<ProfileDto> profileDtos = profiles.stream().map(ProfileConverter::profileEntityToDto).toList();
+        log.debug("Profiles found: {}", profiles);
+        return profileDtos;
+    }
+
+    @Transactional
+    public ObjectId deleteProfile(String id) {
+        ObjectId oId = new ObjectId(id);
+        profileRepository.deleteProfileEntityById(oId);
+        log.debug("Profile deleted: {}", id);
+        return oId;
     }
 
     public InputStreamResource findProfileImage(String photoPath) throws ImageNotFoundException {
@@ -66,6 +80,10 @@ public class ProfileService {
         }
         log.debug("Image found: {}", photoPath);
         return inputStreamResource;
+    }
+
+    public boolean isProfileExist(ObjectId id) {
+        return profileRepository.existsById(id);
     }
 
     private ProfileEntity enrich(ProfileEntity profile) {

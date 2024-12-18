@@ -5,4 +5,6 @@ import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface TechnologyRepository extends MongoRepository<TechnologyEntity, ObjectId> {
+    boolean existsTechnologyEntitiesById(ObjectId technologyId);
+    void deleteTechnologyEntityById(ObjectId technologyId);
 }

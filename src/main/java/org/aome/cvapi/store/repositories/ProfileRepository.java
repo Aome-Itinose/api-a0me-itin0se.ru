@@ -11,4 +11,5 @@ import java.util.Optional;
 @Repository
 public interface ProfileRepository extends MongoRepository<ProfileEntity, ObjectId> {
     Optional<ProfileEntity> findTopByOrderByTimestampDesc();
+    void deleteProfileEntityById(ObjectId id);
 }

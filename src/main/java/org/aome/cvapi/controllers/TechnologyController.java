@@ -2,10 +2,12 @@ package org.aome.cvapi.controllers;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.aome.cvapi.dtos.IdDto;
 import org.aome.cvapi.dtos.TechnologyDto;
 import org.aome.cvapi.services.TechnologyService;
 import org.aome.cvapi.util.exceptions.ValidationException;
 import org.aome.cvapi.util.validation.ExceptionMessageCollector;
+import org.aome.cvapi.util.validation.TechnologyIdValidator;
 import org.bson.types.ObjectId;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
@@ -22,6 +24,7 @@ public class TechnologyController {
 
     private final TechnologyService technologyService;
     private final ExceptionMessageCollector exceptionMessageCollector;
+    private final TechnologyIdValidator technologyIdValidator;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -49,6 +52,17 @@ public class TechnologyController {
         }
         int savedTechnologies = technologyService.saveTechnologyList(technologies);
         log.info("{} technologies saved", savedTechnologies);
+    }
+
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteTechnology(@RequestBody @Validated IdDto idDto, BindingResult bindingResult) {
+        technologyIdValidator.validate(idDto, bindingResult);
+        if(bindingResult.hasErrors()) {
+            throw new ValidationException(exceptionMessageCollector.collectMessage(bindingResult));
+        }
+        technologyService.deleteTechnology(idDto.getId());
+        log.info("Technology deleted with id {}", idDto.getId());
     }
 
 
